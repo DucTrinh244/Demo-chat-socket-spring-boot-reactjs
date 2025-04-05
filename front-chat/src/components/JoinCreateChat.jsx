@@ -7,11 +7,10 @@ import { createRoomApi, joinChatApi } from "../services/RoomService";
 const JoinCreateChat = () => {
   const [detail, setDetail] = useState({
     roomId: "",
-    userName: "",
+    userEmail: "",
   });
 
-  const { setRoomId, setCurrentUser, setConnected } =
-    useChatContext();
+  const { setRoomId, setCurrentUser, setConnected } = useChatContext();
   const navigate = useNavigate();
 
   function handleFormInputChange(event) {
@@ -22,7 +21,7 @@ const JoinCreateChat = () => {
   }
 
   function validateForm() {
-    if (detail.roomId === "" || detail.userName === "") {
+    if (detail.roomId === "" || detail.userEmail === "") {
       toast.error("Invalid Input !!");
       return false;
     }
@@ -36,7 +35,7 @@ const JoinCreateChat = () => {
       try {
         const room = await joinChatApi(detail.roomId);
         toast.success("joined..");
-        setCurrentUser(detail.userName);
+        setCurrentUser(detail.userEmail);
         setRoomId(room.roomId);
         setConnected(true);
         navigate("/chat");
@@ -51,17 +50,47 @@ const JoinCreateChat = () => {
     }
   }
 
+  // async function createRoom() {
+  //   if (validateForm()) {
+  //     //create room
+  //     console.log(detail);
+  //     // call api to create room on backend
+  //     try {
+  //       const response = await createRoomApi(detail.roomId);
+  //       console.log(response);
+  //       toast.success("Room Created Successfully !!");
+  //       //join the room
+  //       setCurrentUser(detail.userEmail);
+  //       setRoomId(response.roomId);
+  //       setConnected(true);
+
+  //       navigate("/chat");
+
+  //       //forward to chat page...
+  //     } catch (error) {
+  //       console.log(error);
+  //       if (error.status == 400) {
+  //         toast.error("Room  already exists !!");
+  //       } else {
+  //         toast("Error in creating room");
+  //       }
+  //     }
+  //   }
+  // }
   async function createRoom() {
     if (validateForm()) {
       //create room
       console.log(detail);
       // call api to create room on backend
       try {
-        const response = await createRoomApi(detail.roomId);
+        const response = await createRoomApi({
+          roomId: detail.roomId,
+          userEmail: detail.userEmail,
+        });
         console.log(response);
         toast.success("Room Created Successfully !!");
         //join the room
-        setCurrentUser(detail.userName);
+        setCurrentUser(detail.userEmail);
         setRoomId(response.roomId);
         setConnected(true);
 
@@ -71,7 +100,7 @@ const JoinCreateChat = () => {
       } catch (error) {
         console.log(error);
         if (error.status == 400) {
-          toast.error("Room  already exists !!");
+          toast.error("Room  already exists  or email not exists!");
         } else {
           toast("Error in creating room");
         }
@@ -92,14 +121,14 @@ const JoinCreateChat = () => {
         {/* name div */}
         <div className="">
           <label htmlFor="name" className="block font-medium mb-2">
-            Your name
+            Your Email
           </label>
           <input
             onChange={handleFormInputChange}
-            value={detail.userName}
+            value={detail.userEmail}
             type="text"
             id="name"
-            name="userName"
+            name="userEmail"
             placeholder="Enter the name"
             className="w-full dark:bg-gray-600 px-4 py-2 border dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

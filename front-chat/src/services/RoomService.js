@@ -4,16 +4,14 @@ export const createRoomApi = async (roomDetail) => {
   const respone = await httpClient.post(`/api/rooms`, roomDetail, {
     // gửi request
     headers: {
-      "Content-Type": "text/plain",
+      "Content-Type": "application/json",
     },
   });
   return respone.data;
 };
 
-export const joinChatApi = async (roomId, userId) => {
-  const response = await httpClient.get(
-    `/api/rooms/${roomId}?userId=${userId}`
-  );
+export const joinChatApi = async (roomId) => {
+  const response = await httpClient.get(`/api/rooms/${roomId}`);
   return response.data;
 };
 
