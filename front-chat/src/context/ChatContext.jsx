@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 
 const ChatContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const ChatProvider = ({ children }) => {
   const [roomId, setRoomId] = useState("");
   const [currentUser, setCurrentUser] = useState("");
@@ -24,4 +25,5 @@ export const ChatProvider = ({ children }) => {
 };
 
 const useChatContext = () => useContext(ChatContext);
+// eslint-disable-next-line react-refresh/only-export-components
 export default useChatContext;

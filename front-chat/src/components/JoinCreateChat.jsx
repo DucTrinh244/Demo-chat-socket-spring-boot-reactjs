@@ -27,20 +27,17 @@ const JoinCreateChat = () => {
     }
     return true;
   }
-
   async function joinChat() {
     if (validateForm()) {
-      //join chat
-
       try {
-        const room = await joinChatApi(detail.roomId);
+        const room = await joinChatApi(detail.roomId, detail.userEmail);
         toast.success("joined..");
         setCurrentUser(detail.userEmail);
         setRoomId(room.roomId);
         setConnected(true);
         navigate("/chat");
       } catch (error) {
-        if (error.status == 400) {
+        if (error.response && error.response.status == 400) {
           toast.error(error.response.data);
         } else {
           toast.error("Error in joining room");
@@ -49,34 +46,7 @@ const JoinCreateChat = () => {
       }
     }
   }
-
-  // async function createRoom() {
-  //   if (validateForm()) {
-  //     //create room
-  //     console.log(detail);
-  //     // call api to create room on backend
-  //     try {
-  //       const response = await createRoomApi(detail.roomId);
-  //       console.log(response);
-  //       toast.success("Room Created Successfully !!");
-  //       //join the room
-  //       setCurrentUser(detail.userEmail);
-  //       setRoomId(response.roomId);
-  //       setConnected(true);
-
-  //       navigate("/chat");
-
-  //       //forward to chat page...
-  //     } catch (error) {
-  //       console.log(error);
-  //       if (error.status == 400) {
-  //         toast.error("Room  already exists !!");
-  //       } else {
-  //         toast("Error in creating room");
-  //       }
-  //     }
-  //   }
-  // }
+  
   async function createRoom() {
     if (validateForm()) {
       //create room
@@ -84,7 +54,7 @@ const JoinCreateChat = () => {
       // call api to create room on backend
       try {
         const response = await createRoomApi({
-          roomId: detail.roomId,
+          roomName: detail.roomId,
           userEmail: detail.userEmail,
         });
         console.log(response);
@@ -100,7 +70,7 @@ const JoinCreateChat = () => {
       } catch (error) {
         console.log(error);
         if (error.status == 400) {
-          toast.error("Room  already exists  or email not exists!");
+          toast.error("Email not exists!");
         } else {
           toast("Error in creating room");
         }
